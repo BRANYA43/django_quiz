@@ -49,3 +49,6 @@
 
 
 ext.: [ ] API + Tests
+
+## DB - Schema
+![db](db_schema.png)
