@@ -1,4 +1,5 @@
-from django.urls import path
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import path, reverse_lazy
 from django.views.generic import TemplateView
 
 from .views import UserLoginView
