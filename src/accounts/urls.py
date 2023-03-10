@@ -2,7 +2,7 @@ from django.contrib.auth.views import PasswordChangeView
 from django.urls import path, reverse_lazy
 from django.views.generic import TemplateView
 
-from .views import UserLoginView
+from .views import UserLoginView, UserReactivationView
 from .views import UserLogoutView
 from .views import UserProfileUpdateView
 from .views import UserRegisterView
@@ -20,4 +20,7 @@ urlpatterns = [
     path('logout/', UserLogoutView.as_view(), name='logout'),
     path('profile/', user_profile_view, name='profile'),
     path('profile/update/', UserProfileUpdateView.as_view(), name='profile_update'),
+    path('profile/reactivation/', UserReactivationView.as_view(), name='reactivation'),
+    path('profile/reactivation/done', TemplateView.as_view(template_name='accounts/user_reactivation_done.html'),
+         name='reactivation_done'),
 ]

@@ -20,7 +20,7 @@ class UserRegisterForm(forms.ModelForm):
         help_text='please repeat password'
     )
     
-    def clean_password1(self):
+    def clean_password(self):
         pwd = self.cleaned_data['password1']
         if pwd:
             password_validation.validate_password(pwd)
@@ -75,3 +75,18 @@ class UserUpdateForm(UserChangeForm):
             'city',
             'avatar',
         )
+
+
+class UserReactivationForm(forms.Form):
+    email = forms.EmailField(required=True)
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        users = get_user_model()
+        user = users.objects.get(email=email)
+        if user:
+            user_register.send(get_user_model(), instance=user)
+        else:
+            raise Exception('This email have no user.')
+
+        return email
