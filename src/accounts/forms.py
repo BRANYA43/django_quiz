@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.forms import widgets
 
 from accounts.apps import user_register
+from accounts.validators import validate_email_exist
 
 
 class UserRegisterForm(forms.ModelForm):
@@ -78,15 +79,11 @@ class UserUpdateForm(UserChangeForm):
 
 
 class UserReactivationForm(forms.Form):
-    email = forms.EmailField(required=True)
+    email = forms.EmailField(required=True, validators=[validate_email_exist])
+    model = get_user_model()
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        users = get_user_model()
-        user = users.objects.get(email=email)
-        if user:
-            user_register.send(get_user_model(), instance=user)
-        else:
-            raise Exception('This email have no user.')
-
+        user = self.model.objects.get(email=email)
+        user_register.send(get_user_model(), instance=user)
         return email

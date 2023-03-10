@@ -20,7 +20,7 @@ urlpatterns = [
     path('logout/', UserLogoutView.as_view(), name='logout'),
     path('profile/', user_profile_view, name='profile'),
     path('profile/update/', UserProfileUpdateView.as_view(), name='profile_update'),
-    path('profile/reactivation/', UserReactivationView.as_view(), name='reactivation'),
-    path('profile/reactivation/done', TemplateView.as_view(template_name='accounts/user_reactivation_done.html'),
+    path('reactivation/', UserReactivationView.as_view(), name='reactivation'),
+    path('reactivation/done', TemplateView.as_view(template_name='accounts/user_reactivation_done.html'),
          name='reactivation_done'),
 ]
