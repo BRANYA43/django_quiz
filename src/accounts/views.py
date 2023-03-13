@@ -3,12 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.signing import BadSignature
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, FormView, UpdateView
 
-from accounts.forms import UserRegisterForm, UserUpdateForm
-from accounts.utils import signer
+from .forms import UserReactivationForm, UserRegisterForm, UserUpdateForm
+from .utils import signer
 
 
 class UserRegisterView(CreateView):
@@ -20,7 +20,7 @@ class UserRegisterView(CreateView):
 
 def user_activate(request, sign):
     try:
-        username = signer.usingn(sign)
+        username = signer.unsign(sign)
     except BadSignature:
         return render(request, 'accounts/bad_signature.html')
 
@@ -57,3 +57,10 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+class UserReactivationView(FormView):
+    template_name = 'accounts/user_reactivation.html'
+    model = get_user_model()
+    form_class = UserReactivationForm
+    success_url = reverse_lazy('accounts:reactivation_done')
