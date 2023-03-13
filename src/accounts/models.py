@@ -16,7 +16,7 @@ class User(AbstractUser):
     is_activated = models.BooleanField(default=True, db_index=True)
     avatar = models.ImageField(upload_to=save_avatar, default='profile/default.png')
     birthday = models.DateField(null=True, blank=True)
-    city = models.DateField(null=True, blank=True)
+    city = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta(AbstractUser.Meta):
         db_table = 'users'
