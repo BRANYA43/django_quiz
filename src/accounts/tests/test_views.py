@@ -58,3 +58,24 @@ class TestUserRegisterView(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(0, len(user))
 
+
+class TestUserLoginView(TestCase):
+    def setUp(self) -> None:
+        self.client = Client()
+        self.url = reverse('accounts:login')
+
+    def test_contain_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'accounts/user_login.html')
+
+
+class TestUserLogoutView(TestCase):
+    def setUp(self) -> None:
+        self.client = Client()
+        self.url = reverse('accounts:logout')
+
+    def test_contain_template(self):
+        User.objects.create_user(username='user', password='123qwe!@#')
+        self.client.login(username='user', password='123qwe!@#')
+        response = self.client.post(self.url)
+        self.assertTemplateUsed(response, 'accounts/user_logout.html')
