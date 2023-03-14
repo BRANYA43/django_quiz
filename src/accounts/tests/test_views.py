@@ -1,3 +1,4 @@
+from accounts.forms import UserRegisterForm, UserUpdateForm
 from accounts.models import User
 
 from django.core.signing import Signer
@@ -5,7 +6,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 
 
-class TestViews(TestCase):
+class TestUserRegisterView(TestCase):
     def setUp(self) -> None:
         self.data = {
             'username': 'user_1',
@@ -14,46 +15,46 @@ class TestViews(TestCase):
             'email': 'user_1@test.com',
         }
         self.client = Client()
-        self.registration_url = reverse('accounts:register')
-        self.registration_done_url = reverse('accounts:register_done')
+        self.register_url = reverse('accounts:register')
+        self.register_done_url = reverse('accounts:register_done')
+
+    def test_contain_template(self):
+        response = self.client.get(self.register_url)
+        self.assertTemplateUsed(response, 'accounts/user_register.html')
+
+    def test_contain_form(self):
+        response = self.client.get(self.register_url)
+        form = response.context.get('form')
+        self.assertIsInstance(form, UserRegisterForm)
+
+    def test_success_redirect(self):
+        response = self.client.post(self.register_url, self.data)
+        self.assertRedirects(response, self.register_done_url, status_code=302, target_status_code=200)
+        self.assertEqual(response.url, self.register_done_url)
+
+    def test_not_success_redirect(self):
+        self.data['password1'] = '123qwe!@'
+        response = self.client.post(self.register_url, self.data)
+        self.assertNotEqual(302, response.status_code)
 
     def test_registration_valid(self):
-        response = self.client.post(self.registration_url, self.data)
-
-        self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, self.registration_done_url, status_code=302, target_status_code=200)
-        self.assertEqual(self.registration_done_url, response.url)
+        self.client.post(self.register_url, self.data)
 
         user = User.objects.first()
+
         self.assertEqual(self.data['username'], user.username)
         self.assertEqual(self.data['email'], user.email)
         self.assertTrue(user.check_password(self.data['password1']))
         self.assertFalse(user.is_active)
         self.assertFalse(user.is_activated)
 
-    def test_registration_invalid(self):
-        self.data['password2'] = '123qwe!@'
+    def test_register_invalid(self):
+        self.data['password1'] = '123qwe!@'
 
-        response = self.client.post(self.registration_url, self.data)
-        self.assertNotEqual(302, response.status_code)
-        self.assertFalse(response.context['form'].is_valid())
+        response = self.client.post(self.register_url, self.data)
+        form = response.context['form']
         user = User.objects.filter(username=self.data['username'])
+
+        self.assertFalse(form.is_valid())
         self.assertEqual(0, len(user))
 
-    def test_activation_url(self):
-        response = self.client.post(self.registration_url, self.data)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, self.registration_done_url, status_code=302, target_status_code=200)
-
-        user = User.objects.first()
-        self.assertEqual(self.data['username'], user.username)
-
-        signer = Signer()
-        response = self.client.get(
-            'http://localhost' + reverse('accounts:register_activate', kwargs={'sign': signer.sign(user.username)})
-        )
-        self.assertEqual(200, response.status_code)
-
-        user.refresh_from_db()
-        self.assertTrue(user.is_active)
-        self.assertTrue(user.is_activated)

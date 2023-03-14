@@ -18,6 +18,6 @@ class UserAdmin(admin.ModelAdmin):
     readonly_fields = ('last_login', 'date_joined', 'avatar_img')
 
     def avatar_img(self, instance):
-        return format_html(f'f<img scr="{instance.avatar.url}" alt="{instance.username}" width="50" height="50">')
+        return format_html(f'f<img scr="{instance.avatar.register_url}" alt="{instance.username}" width="50" height="50">')
 
     avatar_img.short_description = 'view'
