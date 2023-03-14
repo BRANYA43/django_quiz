@@ -1,14 +1,11 @@
-from django.contrib.auth.password_validation import password_validators_help_text_html
-from django.core.exceptions import ValidationError
-from django.forms import EmailField, PasswordInput, CharField, ImageField, FileInput, DateField, DateInput
-
-from accounts.apps import user_register
-from accounts.forms import UserRegisterForm, UserUpdateForm, UserReactivationForm
-
-from django.test import TestCase
-
+from accounts.forms import UserReactivationForm, UserRegisterForm, UserUpdateForm
 from accounts.models import User
 from accounts.validators import validate_email_exist
+
+from django.contrib.auth.password_validation import password_validators_help_text_html
+from django.core.exceptions import ValidationError
+from django.forms import CharField, DateField, DateInput, EmailField, FileInput, ImageField, PasswordInput
+from django.test import TestCase
 
 
 class TestUserRegisterForm(TestCase):

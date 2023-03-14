@@ -1,9 +1,8 @@
-from unittest import TestCase
-
-from django.core.exceptions import ValidationError
-
 from accounts.models import User
 from accounts.validators import validate_email_exist
+
+from django.core.exceptions import ValidationError
+from django.test import TestCase
 
 
 class TestValidators(TestCase):

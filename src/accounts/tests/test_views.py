@@ -1,4 +1,4 @@
-from accounts.forms import UserRegisterForm, UserUpdateForm, UserReactivationForm
+from accounts.forms import UserReactivationForm, UserRegisterForm, UserUpdateForm
 from accounts.models import User
 
 from django.core.signing import Signer
