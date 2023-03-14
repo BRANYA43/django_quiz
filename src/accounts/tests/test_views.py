@@ -75,7 +75,63 @@ class TestUserLogoutView(TestCase):
         self.url = reverse('accounts:logout')
 
     def test_contain_template(self):
-        User.objects.create_user(username='user', password='123qwe!@#')
-        self.client.login(username='user', password='123qwe!@#')
+        login_data = {
+            'username': 'user',
+            'password': '123qwe!@#',
+        }
+        User.objects.create_user(**login_data)
+        self.client.login(**login_data)
         response = self.client.post(self.url)
         self.assertTemplateUsed(response, 'accounts/user_logout.html')
+
+
+class TestUserProfileUpdateView(TestCase):
+    def setUp(self) -> None:
+        self.login_data = {
+            'username': 'user',
+            'password': '123qwe!@#',
+        }
+        self.required_data = {
+            'username': self.login_data['username'],
+            'email': 'user@test.com',
+        }
+        self.not_required_data = {
+            'firs_name': 'user_first_name',
+            'last_name': 'user_last_name',
+            # TODO 'birthday': '08.03.2023',
+            'city': 'Kharkov',
+        }
+        self.full_data = {**self.required_data, **self.not_required_data}
+        self.client = Client()
+        self.user = User.objects.create_user(**self.login_data)
+        self.client.login(**self.login_data)
+        self.profile_update_url = reverse('accounts:profile_update')
+        self.profile_url = reverse('accounts:profile')
+
+    def test_contain_template(self):
+        response = self.client.get(self.profile_update_url)
+        self.assertTemplateUsed(response, 'accounts/user_profile_update.html')
+
+    def test_contain_form(self):
+        response = self.client.get(self.profile_update_url)
+        form = response.context.get('form')
+        self.assertIsInstance(form, UserUpdateForm)
+
+    def test_success_redirect_required_data(self):
+        response = self.client.post(self.profile_update_url, self.required_data)
+        self.assertRedirects(response, self.profile_url, status_code=302, target_status_code=200)
+        self.assertEqual(response.url, self.profile_url)
+
+    def test_success_redirect_required_full_data(self):
+        response = self.client.post(self.profile_update_url, self.full_data)
+        self.assertRedirects(response, self.profile_url, status_code=302, target_status_code=200)
+        self.assertEqual(response.url, self.profile_url)
+
+    def test_not_success_redirect(self):
+        self.required_data = {}
+        response = self.client.post(self.profile_update_url, self.required_data)
+        self.assertNotEqual(302, response.status_code)
+
+        self.not_required_data.update(self.required_data)
+        response = self.client.post(self.profile_update_url, self.not_required_data)
+        self.assertNotEqual(302, response.status_code)
