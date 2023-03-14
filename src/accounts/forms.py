@@ -31,7 +31,8 @@ class UserRegisterForm(forms.ModelForm):
         super().clean()
         pwd1 = self.cleaned_data.get('password1')
         pwd2 = self.cleaned_data.get('password2')
-        if pwd1 and pwd2 and pwd1 != pwd2:
+
+        if pwd1 != pwd2:
             raise ValidationError(
                 {'password2': ValidationError('Password not equals', code='password_mismatch')}
             )
@@ -80,10 +81,10 @@ class UserUpdateForm(UserChangeForm):
 
 class UserReactivationForm(forms.Form):
     email = forms.EmailField(required=True, validators=[validate_email_exist])
-    model = get_user_model()
 
     def clean_email(self):
+        model = get_user_model()
         email = self.cleaned_data['email']
-        user = self.model.objects.get(email=email)
+        user = model.objects.get(email=email)
         user_register.send(get_user_model(), instance=user)
         return email
