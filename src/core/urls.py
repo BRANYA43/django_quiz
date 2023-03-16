@@ -16,6 +16,7 @@ urlpatterns = [
     path('accounts/reset/done', PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('accounts/reset/confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('accounts/reset/complete/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('quiz/', include('quiz.urls'))
 ]
 
 if settings.DEBUG:

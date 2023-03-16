@@ -32,7 +32,7 @@ class UserRegisterForm(forms.ModelForm):
         pwd1 = self.cleaned_data.get('password1')
         pwd2 = self.cleaned_data.get('password2')
 
-        if pwd1 != pwd2:
+        if pwd1 and pwd2 and pwd1 != pwd2:
             raise ValidationError(
                 {'password2': ValidationError('Password not equals', code='password_mismatch')}
             )
