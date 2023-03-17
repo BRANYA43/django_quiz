@@ -18,7 +18,7 @@ class QuestionInlineFormSet(forms.BaseInlineFormSet):
 
             if not (1 <= order_num <= 100):
                 raise ValidationError(
-                    'Order num must be range from 1 ' 
+                    'Order num must be range from 1 '
                     f'to {self.instance.QUESTION_MAX_LIMIT} inclusive'
                 )
             if i == 0 and order_num != 1:

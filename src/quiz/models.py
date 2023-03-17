@@ -82,5 +82,18 @@ class Result(BaseModel):
         verbose_name = 'Result'
         verbose_name_plural = 'Results'
 
-    def update_result(self, order_name: int, questions: Question, selected_choices: Choice):
-        ...
+    def update_result(self, order_number, question, selected_choices):
+        correct_choice = [choice.is_correct for choice in question.choices.all()]
+        correct_answer = True
+        for group in zip(selected_choices, correct_choice):
+            correct_answer = correct_answer and (group[0] == group[1])
+            # correct_answer &= (group[0] == group[1])
+
+        self.num_correct_answers += int(correct_answer)
+        self.num_incorrect_answers += 1 - int(correct_answer)
+        self.current_order_number = order_number
+
+        if order_number == question.exam.questions.count():
+            self.state = self.STATE.FINISHED
+
+        self.save()

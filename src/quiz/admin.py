@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .forms import ChoiceInlineFormSet, QuestionInlineFormSet
-from .models import Choice, Exam, Result, Question
+from .models import Choice, Exam, Question, Result
 
 
 class ChoiceInline(admin.TabularInline):
