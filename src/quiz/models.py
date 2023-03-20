@@ -26,6 +26,9 @@ class Exam(BaseModel):
     description = models.TextField(null=True, blank=True)
     level = models.PositiveSmallIntegerField(choices=LEVEL.choices, default=LEVEL.BASIC)
 
+    def quests_count(self):
+        return self.questions.count()
+
     def __str__(self):
         return self.title
 
@@ -36,7 +39,7 @@ class Exam(BaseModel):
 
 
 class Question(BaseModel):
-    exam = models.ForeignKey(Exam, related_name='question', on_delete=models.CASCADE)
+    exam = models.ForeignKey(Exam, related_name='questions', on_delete=models.CASCADE)
     order_num = models.PositiveSmallIntegerField()
     text = models.CharField(max_length=2048)
     image = models.ImageField(default=False)
@@ -51,7 +54,7 @@ class Question(BaseModel):
 
 
 class Choice(models.Model):
-    question = models.ForeignKey(Question, related_name='choice', on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='choices', on_delete=models.CASCADE)
     text = models.CharField(max_length=1024)
     is_correct = models.BooleanField(default=False)
 
@@ -73,7 +76,7 @@ class Result(BaseModel):
     exam = models.ForeignKey(Exam, related_name='results', on_delete=models.CASCADE)
     state = models.PositiveSmallIntegerField(default=STATE.NEW, choices=STATE.choices)
     uuid = models.UUIDField(default=uuid4, db_index=True, unique=True)
-    current_order_number = models.PositiveSmallIntegerField(null=True, db_index=0)
+    current_order_number = models.PositiveSmallIntegerField(null=True, default=0)
     num_correct_answers = models.PositiveSmallIntegerField(default=0)
     num_incorrect_answers = models.PositiveSmallIntegerField(default=0)
 
@@ -82,7 +85,7 @@ class Result(BaseModel):
         verbose_name = 'Result'
         verbose_name_plural = 'Results'
 
-    def update_result(self, order_number, question, selected_choices):
+    def update_result(self, order_number: int, question: Question, selected_choices: Choice):
         correct_choice = [choice.is_correct for choice in question.choices.all()]
         correct_answer = True
         for group in zip(selected_choices, correct_choice):

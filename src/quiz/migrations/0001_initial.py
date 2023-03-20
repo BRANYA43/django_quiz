@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('update_timestamp', models.DateTimeField(auto_now=True)),
                 ('state', models.PositiveSmallIntegerField(choices=[(0, 'New'), (1, 'Finished')], default=0)),
                 ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, unique=True)),
-                ('current_order_number', models.PositiveSmallIntegerField(db_index=0, null=True)),
+                ('current_order_number', models.PositiveSmallIntegerField(default=0, null=True)),
                 ('num_correct_answers', models.PositiveSmallIntegerField(default=0)),
                 ('num_incorrect_answers', models.PositiveSmallIntegerField(default=0)),
                 ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='results', to='quiz.exam')),
@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
                 ('order_num', models.PositiveSmallIntegerField()),
                 ('text', models.CharField(max_length=2048)),
                 ('image', models.ImageField(default=False, upload_to='')),
-                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='question', to='quiz.exam')),
+                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='questions', to='quiz.exam')),
             ],
             options={
                 'verbose_name': 'Question',
@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('text', models.CharField(max_length=1024)),
                 ('is_correct', models.BooleanField(default=False)),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='choice', to='quiz.question')),
+                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='choices', to='quiz.question')),
             ],
             options={
                 'verbose_name': 'Choice',
