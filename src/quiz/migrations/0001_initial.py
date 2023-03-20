@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('update_timestamp', models.DateTimeField(auto_now=True)),
                 ('state', models.PositiveSmallIntegerField(choices=[(0, 'New'), (1, 'Finished')], default=0)),
                 ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, unique=True)),
-                ('current_order_number', models.PositiveSmallIntegerField(db_index=0, null=True)),
+                ('current_order_number', models.PositiveSmallIntegerField(default=0, null=True)),
                 ('num_correct_answers', models.PositiveSmallIntegerField(default=0)),
                 ('num_incorrect_answers', models.PositiveSmallIntegerField(default=0)),
                 ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='results', to='quiz.exam')),

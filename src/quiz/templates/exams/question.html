@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
+{% load custom_filters custom_tags %}
 
 {% block title %}
     Question {{ question.order_num }}
 {% endblock %}
 
 {% block header %}
-    {{ question.text }}
+    ({{ question.order_num }}) {{ question.text }}
+{#    {% include 'includes/progressbar.html' %}#}}
+    {% expression '(%1 - 1) * 100 // %2' question.order_num question.exam.quests_count as level %}
+    <div class="progress" role="progressbar"
+         aria-label="Basic example" aria-valuenow="{{ level }}" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress-bar" style="width: {{ level }}%">{{ level }}%</div>
+    </div>
 {% endblock %}
 
 {% block content %}
@@ -15,12 +22,12 @@
             {{ choices.management_form }}
             {% for form in choices %}
                 <div class="mt-1">
-                    {{ form.is_selected }} <label for="{{ form.is_selected.id_for_label }}">
+                    {{ form.is_selected }} <label form="{{ form.is_selected.id_for_label }}">
                         {{ form.text.value }}
                     </label>
                 </div>
             {% endfor %}
-            <button type="submit" class="btn btn-success mt-5">Дальше ></button>
+            <button type="submit" class="btn btn-success mt-5">Next</button>
         </form>
     </div>
 {% endblock %}

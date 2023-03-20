@@ -26,6 +26,9 @@ class Exam(BaseModel):
     description = models.TextField(null=True, blank=True)
     level = models.PositiveSmallIntegerField(choices=LEVEL.choices, default=LEVEL.BASIC)
 
+    def quests_count(self):
+        return self.questions.count()
+
     def __str__(self):
         return self.title
 
@@ -73,7 +76,7 @@ class Result(BaseModel):
     exam = models.ForeignKey(Exam, related_name='results', on_delete=models.CASCADE)
     state = models.PositiveSmallIntegerField(default=STATE.NEW, choices=STATE.choices)
     uuid = models.UUIDField(default=uuid4, db_index=True, unique=True)
-    current_order_number = models.PositiveSmallIntegerField(null=True, db_index=0)
+    current_order_number = models.PositiveSmallIntegerField(null=True, default=0)
     num_correct_answers = models.PositiveSmallIntegerField(default=0)
     num_incorrect_answers = models.PositiveSmallIntegerField(default=0)
 
