@@ -2,10 +2,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views.generic import CreateView
+from django.views.generic import DetailView
+from django.views.generic import ListView
+from django.views.generic import UpdateView
 
 from .forms import ChoicesFormSet
-from .models import Exam, Question, Result
+from .models import Exam
+from .models import Question
+from .models import Result
 
 
 class ExamListView(LoginRequiredMixin, ListView):
@@ -31,6 +36,7 @@ class ExamResultCreateView(LoginRequiredMixin, CreateView):
         result = Result.objects.create(
             user=request.user,
             exam=Exam.objects.get(uuid=uuid),
+            state=Result.STATE.NEW
         )
 
         return HttpResponseRedirect(

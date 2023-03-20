@@ -36,7 +36,7 @@ class Exam(BaseModel):
 
 
 class Question(BaseModel):
-    exam = models.ForeignKey(Exam, related_name='question', on_delete=models.CASCADE)
+    exam = models.ForeignKey(Exam, related_name='questions', on_delete=models.CASCADE)
     order_num = models.PositiveSmallIntegerField()
     text = models.CharField(max_length=2048)
     image = models.ImageField(default=False)
@@ -51,7 +51,7 @@ class Question(BaseModel):
 
 
 class Choice(models.Model):
-    question = models.ForeignKey(Question, related_name='choice', on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='choices', on_delete=models.CASCADE)
     text = models.CharField(max_length=1024)
     is_correct = models.BooleanField(default=False)
 
@@ -82,5 +82,18 @@ class Result(BaseModel):
         verbose_name = 'Result'
         verbose_name_plural = 'Results'
 
-    def update_result(self, order_name: int, questions: Question, selected_choices: Choice):
-        ...
+    def update_result(self, order_number: int, question: Question, selected_choices: Choice):
+        correct_choice = [choice.is_correct for choice in question.choices.all()]
+        correct_answer = True
+        for group in zip(selected_choices, correct_choice):
+            correct_answer = correct_answer and (group[0] == group[1])
+            # correct_answer &= (group[0] == group[1])
+
+        self.num_correct_answers += int(correct_answer)
+        self.num_incorrect_answers += 1 - int(correct_answer)
+        self.current_order_number = order_number
+
+        if order_number == question.exam.questions.count():
+            self.state = self.STATE.FINISHED
+
+        self.save()

@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
                 ('order_num', models.PositiveSmallIntegerField()),
                 ('text', models.CharField(max_length=2048)),
                 ('image', models.ImageField(default=False, upload_to='')),
-                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='question', to='quiz.exam')),
+                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='questions', to='quiz.exam')),
             ],
             options={
                 'verbose_name': 'Question',
@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('text', models.CharField(max_length=1024)),
                 ('is_correct', models.BooleanField(default=False)),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='choice', to='quiz.question')),
+                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='choices', to='quiz.question')),
             ],
             options={
                 'verbose_name': 'Choice',
