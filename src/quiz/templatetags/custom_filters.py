@@ -16,3 +16,10 @@ def multi(value, arg):
 @register.filter
 def dived(value, arg):
     return value // arg
+
+
+@register.filter
+def calc_point(v1, v2):
+    if (point := v1 - v2) > 0:
+        return point
+    return 0
