@@ -15,20 +15,20 @@ class QuestionInlineFormSet(forms.BaseInlineFormSet):
         order_nums = [form.instance.order_num for form in self.forms]
 
         for i, order_num in enumerate(order_nums):
-
-            if not (1 <= order_num <= 100):
-                raise ValidationError(
-                    'Order num must be range from 1 '
-                    f'to {self.instance.QUESTION_MAX_LIMIT} inclusive'
-                )
-            if i == 0 and order_num != 1:
-                raise ValidationError(
-                    'First order num must start 1.'
-                )
-            elif i != 0 and order_num - order_nums[i-1] != 1:
-                raise ValidationError(
-                    'Order num must increment 1 from past order num.'
-                )
+            if order_num is not None:
+                if not (1 <= order_num <= 100):
+                    raise ValidationError(
+                        'Order num must be range from 1 '
+                        f'to {self.instance.QUESTION_MAX_LIMIT} inclusive'
+                    )
+                if i == 0 and order_num != 1:
+                    raise ValidationError(
+                        'First order num must start 1.'
+                    )
+                elif i != 0 and order_num - order_nums[i-1] != 1:
+                    raise ValidationError(
+                        'Order num must increment 1 from past order num.'
+                    )
 
 
 class ChoiceInlineFormSet(forms.BaseInlineFormSet):
