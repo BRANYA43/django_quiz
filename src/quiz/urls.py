@@ -1,11 +1,8 @@
 from django.urls import path
-from django.views.generic import TemplateView
 
-from .views import ExamDetailView, ExamResultUpdateView
-from .views import ExamResultQuestionView
-from .views import ExamListView
-from .views import ExamResultCreateView
-from .views import ExamResultDetailView
+from .views import ExamDetailView, ExamListView, ExamResultCreateView, ExamResultDetailView, ExamResultQuestionView, \
+    ExamResultUpdateView
+
 
 app_name = 'quiz'
 
