@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %}
+    Exam - Delete
+{% endblock %}
+
+{% block header %}
+    Exam: Delete a results of unfinished exam.
+{% endblock %}
+
+{% block content %}
+    <div class="text-center">
+    <h2>Exam: {{ result.exam.title }} {{ results.create_timestamp|date:'d-m-Y H:i' }}</h2>
+    <h3>Do you want to delete results of unfinished exam from history?</h3>
+    </div>
+    <div class="text-center">
+        <form method="post">
+            {% csrf_token %}
+        <button type="sumbin" class="btn btn-primary">Yes</button>
+        <a class="btn btn-primary" href="{% url 'quiz:details' uuid=result.exam.uuid %}">No</a>
+        </form>
+    </div>
+{% endblock %}

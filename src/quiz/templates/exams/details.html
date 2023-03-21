@@ -67,7 +67,7 @@
                     {% for result in object_list %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ result.create_timestamp|date:'d-m-Y H:i' }}</td>  {# |date:'d-m-Y H:i' #}
+                        <td>{{ result.create_timestamp|date:'d-m-Y H:i' }}</td>
                         <td>{{ result.num_correct_answers|calc_point:result.num_incorrect_answers }}</td>
                         <td>{{ result.get_state_display }}</td>
                         <td>
@@ -75,8 +75,8 @@
                                 <a class="btn btn-outline-warning" href="{% url 'quiz:result_update' exam.uuid result.uuid %}">
                                     Continue
                                 </a>
-                                <a class="btn btn-outline-danger" href="#">
-                                    Remove
+                                <a class="btn btn-outline-danger" href="{% url 'quiz:result_delete' exam.uuid result.uuid %}">
+                                    Delete
                                 </a>
                             {% else %}
                                 <a class="btn btn-outline-success" href="{% url 'quiz:result_details' exam.uuid result.uuid %}">
