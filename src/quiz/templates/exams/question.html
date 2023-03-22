@@ -8,7 +8,7 @@
 {% block header %}
     ({{ question.order_num }}) {{ question.text }}
 {#    {% include 'includes/progressbar.html' %}#}}
-    {% expression '(%1 - 1) * 100 // %2' question.order_num question.exam.quests_count as level %}
+    {% expression '({0} - 1) * 100 // {1}' question.order_num question.exam.quests_count as level %}
     <div class="progress" role="progressbar"
          aria-label="Basic example" aria-valuenow="{{ level }}" aria-valuemin="0" aria-valuemax="100">
       <div class="progress-bar" style="width: {{ level }}%">{{ level }}%</div>

@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
+{% load custom_tags %}
+
 {% block title %}
-    Результат теста
+    Result of exam
 {% endblock %}
 
 {% block header %}
@@ -28,7 +30,17 @@
                         </tr>
                         <tr>
                             <td>Result</td>
-                            <td>{{ result.num_correct_answers }} / {{ result.num_incorrect_answers }}</td>
+                            <td>
+                                {% expression '{0} * 100 // {1}' result.num_correct_answers result.exam.quests_count as correct_level %}
+                                {% expression '100 - {0}' correct_level as incorrect_level %}
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" role="progressbar" aria-label="Segment two"
+                                         style="width: {{ correct_level }}%" aria-valuenow="{{ correct_level }}" aria-valuemin="0" aria-valuemax="100">{{ correct_level }}%</div>
+                                    <div class="progress-bar bg-danger" role="progressbar" aria-label="Segment one"
+                                         style="width: {{ incorrect_level }}%" aria-valuenow="{{ incorrect_level }}" aria-valuemin="0" aria-valuemax="100">
+                                        {{ incorrect_level }}%</div>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
               </table>
