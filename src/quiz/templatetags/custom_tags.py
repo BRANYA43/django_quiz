@@ -4,7 +4,7 @@ register = template.Library()
 
 
 @register.simple_tag
-def expression(value, *args):
-    for idx, arg in enumerate(args, 1):
-        value = value.replace(f'%{idx}', str(arg))
-    return eval(value)
+def expression(value: str, *args):
+    print(args)
+    print(value.format(*args))
+    return eval(value.format(*args))

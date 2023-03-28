@@ -1,33 +1,5 @@
-
-Pull requests
-Issues
-Codespaces
-Marketplace
-Explore
-@BRANYA43
-python-hillel /
-django_quiz_1
-Public
-
-Fork your own copy of python-hillel/django_quiz_1
-
-Code
-Issues
-Pull requests
-Actions
-Projects
-Security
-
-    Insights
-
-django_quiz_1/src/quiz/templates/exams/details.html
-@python-hillel
-python-hillel Django 18
-Latest commit 3f6f15e Mar 17, 2023
-History
-1 contributor
-97 lines (94 sloc) 3.65 KB
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block title %}
     Details of exam
@@ -95,16 +67,16 @@ History
                     {% for result in object_list %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ result.create_timestamp|date:'d-m-Y H:i' }}</td>  {# |date:'d-m-Y H:i' #}
-                        <td>N/A</td>
+                        <td>{{ result.create_timestamp|date:'d-m-Y H:i' }}</td>
+                        <td>{{ result.num_correct_answers|calc_point:result.num_incorrect_answers }}</td>
                         <td>{{ result.get_state_display }}</td>
                         <td>
                             {% if result.state == result.STATE.NEW %}
                                 <a class="btn btn-outline-warning" href="{% url 'quiz:result_update' exam.uuid result.uuid %}">
                                     Continue
                                 </a>
-                                <a class="btn btn-outline-danger" href="#">
-                                    Remove
+                                <a class="btn btn-outline-danger" href="{% url 'quiz:result_delete' exam.uuid result.uuid %}">
+                                    Delete
                                 </a>
                             {% else %}
                                 <a class="btn btn-outline-success" href="{% url 'quiz:result_details' exam.uuid result.uuid %}">
