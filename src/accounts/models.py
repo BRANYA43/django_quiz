@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-def save_avatar(instance):
+def save_avatar(instance, filename):
     filename = f'profile/{instance.username}_logo'
     if os.path.exists(settings.MEDIA_ROOT / filename):
         os.remove(settings.MEDIA_ROOT / filename)

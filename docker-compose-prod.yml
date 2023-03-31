@@ -4,7 +4,6 @@ name: 'quiz'
 
 services:
   web:
-    build: .
     container_name: web
     image: branya/web:0.0.1
     command: gunicorn core.wsgi:application --workers 4 --bind 0.0.0.0:8890
@@ -24,7 +23,6 @@ services:
     restart: always
 
   db:
-    build: ./postgres
     container_name: db
     image: branya/db:0.0.1
     volumes:
@@ -39,7 +37,6 @@ services:
     restart: always
 
   nginx:
-    build: ./nginx
     container_name: nginx
     image: branya/nginx:0.0.1
     volumes:
