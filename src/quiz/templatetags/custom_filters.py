@@ -20,6 +20,4 @@ def dived(value, arg):
 
 @register.filter
 def calc_point(v1, v2):
-    if (point := v1 - v2) > 0:
-        return point
-    return 0
+    return max(0, v1 - v2)
