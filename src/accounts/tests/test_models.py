@@ -46,7 +46,7 @@ class TestModel(TestCase):
         self.assertTrue(field.blank)
 
     def test_save_avatar(self):
-        filename = save_avatar(self.user)
+        filename = save_avatar(self.user, '')
         self.assertEqual(f'profile/{self.user.username}_logo', filename)
 
     def test_convert_user_to_str(self):

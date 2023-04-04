@@ -168,10 +168,14 @@ CELERY_BROKER_URL = getenv('CELERY_BROKER')
 CELERY_BEAT_SCHEDULE = {
     'simple_task': {
         'task': 'quiz.my_tasks.simple_task',
-        'schedule': crontab(minute='*/1')
+        'schedule': crontab(minute='*/5')
     },
     'send_email_report': {
         'task': 'quiz.my_tasks.send_email_report',
-        'schedule': crontab(minute='*/2')
-    }
+        'schedule': crontab(minute='*/5')
+    },
+    'send_email_reminder': {
+        'task': 'quiz.my_tasks.send_email_reminder',
+        'schedule': crontab(minute='*/1')
+    },
 }
