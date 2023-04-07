@@ -1,10 +1,11 @@
 from celery.result import AsyncResult
+from django.contrib.auth.decorators import login_required
 
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-from .my_tasks import create_task
+from .my_tasks import create_task, user_task
 
 
 # @cache_page(timeout=30)
@@ -29,5 +30,13 @@ def get_status(request, task_id):
             'task_status': response.status,
             'task_result': '' if response.result is None else str(response.result)
         }
-
         return JsonResponse(result, status=200)
+
+
+@login_required
+def get_user_tasks_home(request):
+    if request.method == 'GET':
+        return render(request, 'long_task/user_tasks_home.html')
+    elif request.method == 'POST':
+        user_task.delay(request.user.pk)
+        return render(request, 'long_task/user_tasks_home.html')

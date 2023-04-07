@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    User tasks home
+{% endblock %}
+
+{% block header %}
+    User tasks
+{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Tasks</h2>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary" data-type="0" type="submit" formmethod="post">User task</button>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
