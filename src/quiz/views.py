@@ -7,6 +7,7 @@ from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
 from django.views.generic.list import MultipleObjectMixin
+from django.core.cache import cache
 
 from .forms import ChoicesFormSet
 from .models import Exam
@@ -74,10 +75,13 @@ class ExamResultQuestionView(LoginRequiredMixin, UpdateView):
 
     @staticmethod
     def get_question(uuid, order_num):
-        question = Question.objects.get(
-            exam__uuid=uuid,
-            order_num=order_num
-        )
+        question = cache.get('question')
+        if not question:
+            question = Question.objects.get(
+                exam__uuid=uuid,
+                order_num=order_num
+            )
+            cache.set('question', question, 30)
         return question
 
     def get(self, request, *args, **kwargs):
